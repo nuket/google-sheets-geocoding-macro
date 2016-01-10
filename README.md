@@ -1,4 +1,4 @@
-# google-sheets-geocoding-macro
+# Google Sheets Geocoding Macro
 
 ![How It Works](google-sheets-geocoding-macro.gif)
 
