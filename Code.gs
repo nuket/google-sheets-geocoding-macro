@@ -316,6 +316,7 @@ function addressToPosition() {
   
   for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
     var address = cells.getCell(addressRow, addressColumn).getValue();
+    address = address.replace(/'/g, "%27");
     
     // Geocode the address and plug the lat, lng pair into the 
     // 2nd and 3rd elements of the current range row.
