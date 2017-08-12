@@ -16,12 +16,18 @@ Coming soon, it's currently Pending Review. If it's accepted, it will be availab
 
 Now it supports geocoding using address data spread across multiple columns. 
 
-The way this works is: you select a set of columns containing the data, and the geocoding process puts the latitude, longitude data in the rightmost two columns. It will overwrite any data in those two columns.
+The way this works is: You select a set of columns containing the data, and the geocoding process puts the latitude, longitude data in the rightmost two columns. It will overwrite any data in those two columns.
+
+Some care is needed, as it will concatenate all columns except the rightmost two columns to create the address string.
 
 ![Multicolumn Address Geocoding](google-sheets-geocoding-macro-forward.png)
 
 ## Latitude, Longitude &rarr; Nearest Address
 
-It also supports reverse geocoding. Simply select the latitude, longitude columns and it will place the nearest address data in the rightmost column. It will overwrite any data in that column.
+It also supports reverse geocoding. 
+
+Simply select the latitude, longitude columns and it will place the nearest address data in the rightmost column. It will overwrite any data in that column.
+
+Less care is needed, as it will automatically use the leftmost two columns as the latitude, longitude pair.
 
 ![Reverse Geocoding](google-sheets-geocoding-macro-reverse.png)
