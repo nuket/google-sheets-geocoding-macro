@@ -1,3 +1,24 @@
+// Geocode Addresses
+// Copyright (c) 2016 - 2017 Max Vilimpoc
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 // Bias the geocoding results in favor of these geographic regions.
 // The regions are specified as ccTLD codes.
 // 
@@ -293,33 +314,57 @@ function promptForGeocodingRegion() {
 }
 */
 
+// Forward Geocoding -- convert address to GPS position.
 function addressToPosition() {
   var sheet = SpreadsheetApp.getActiveSheet();
   var cells = sheet.getActiveRange();
   
-  // Must have selected 3 columns (Address, Lat, Lng).
+  var popup = SpreadsheetApp.getUi();
+  
+  // Must have selected at least 3 columns (Address, Lat, Lng).
   // Must have selected at least 1 row.
+  
+  var columnCount = cells.getNumColumns();
 
-  if (cells.getNumColumns() != 3) {
-    Logger.log("Must select at least 3 columns: Address, Lat, Lng columns.");
+  if (columnCount < 3) {
+    popup.alert("Select at least 3 columns: Address in the leftmost column(s); the geocoded Latitude, Longitude will go into the last 2 columns.");
     return;
   }
   
-  var addressColumn = 1;
   var addressRow;
+
+//  var addressColumnStart = 1; // Address data is in columns [1 .. columnCount - 2].
+//  var addressColumnStop  = columnCount - 2; 
   
-  var latColumn = addressColumn + 1;
-  var lngColumn = addressColumn + 2;
+  var addressColumn;
+  
+  var latColumn = columnCount - 1; // Latitude  goes into the next-to-last column.
+  var lngColumn = columnCount;     // Longitude goes into the last column.
   
   var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
   var location;
   
+  // Address data is in columns [1 .. columnCount - 2].
   for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
-    var address = cells.getCell(addressRow, addressColumn).getValue();
+    var address = ''; // Start with an empty String.
+    var part    = ''; // Part of the address to be concatenated.
+    
+    for (addressColumn = 1; addressColumn < columnCount - 2; addressColumn++) {
+      part = cells.getCell(addressRow, addressColumn).getValue();
+      
+      if (part) {
+        address += ' ';
+        address += part;
+      }
+    }
+
+    // Replace problem characters.
     address = address.replace(/'/g, "%27");
+
+    Logger.log(address);
     
     // Geocode the address and plug the lat, lng pair into the 
-    // 2nd and 3rd elements of the current range row.
+    // last 2 elements of the current range row.
     location = geocoder.geocode(address);
    
     // Only change cells if geocoder seems to have gotten a 
@@ -334,24 +379,29 @@ function addressToPosition() {
   }
 };
 
+// Reverse Geocode -- GPS position to nearest address.
 function positionToAddress() {
   var sheet = SpreadsheetApp.getActiveSheet();
   var cells = sheet.getActiveRange();
+
+  var popup = SpreadsheetApp.getUi();
   
-  // Must have selected 3 columns (Address, Lat, Lng).
+  // Must have selected at least 3 columns (Address, Lat, Lng).
   // Must have selected at least 1 row.
 
-  if (cells.getNumColumns() != 3) {
-    Logger.log("Must select at least 3 columns: Address, Lat, Lng columns.");
+  var columnCount = cells.getNumColumns();
+
+  if (columnCount < 3) {
+    popup.alert("Select at least 3 columns: Latitude, Longitude in the first 2 columns; the reverse-geocoded Address will go into the last column.");
     return;
   }
 
-  var addressColumn = 1;
+  var latColumn     = 1;
+  var lngColumn     = 2;
+
   var addressRow;
-  
-  var latColumn = addressColumn + 1;
-  var lngColumn = addressColumn + 2;
-  
+  var addressColumn = columnCount;
+
   var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
   var location;
   
@@ -370,7 +420,7 @@ function positionToAddress() {
 
       cells.getCell(addressRow, addressColumn).setValue(address);
     }
-  }  
+  }
 };
 
 function generateMenu() {
@@ -382,11 +432,11 @@ function generateMenu() {
   // },
   
   var entries = [{
-    name: "Geocode Selected Cells (Address to   Lat, Long)",
+    name: "Geocode Selected Cells (Address to Latitude, Longitude)",
     functionName: "addressToPosition"
   },
   {
-    name: "Geocode Selected Cells (Address from Lat, Long)",
+    name: "Geocode Selected Cells (Latitude, Longitude to Address)",
     functionName: "positionToAddress"
   }];
   
@@ -412,4 +462,3 @@ function onOpen() {
   // SpreadsheetApp.getUi()
   //   .createMenu();
 };
-
