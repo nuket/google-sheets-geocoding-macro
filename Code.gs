@@ -344,12 +344,13 @@ function addressToPosition() {
   var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
   var location;
   
-  // Address data is in columns [1 .. columnCount - 2].
+  // For each row of selected data...
   for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
     var address = ''; // Start with an empty String.
     var part    = ''; // Part of the address to be concatenated.
     
-    for (addressColumn = 1; addressColumn < columnCount - 2; addressColumn++) {
+    // Address data is in columns [1 .. columnCount - 2].
+    for (addressColumn = 1; addressColumn <= columnCount - 2; addressColumn++) {
       part = cells.getCell(addressRow, addressColumn).getValue();
       
       if (part) {
