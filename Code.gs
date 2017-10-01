@@ -325,6 +325,7 @@ function addressToPosition() {
   // Must have selected at least 1 row.
   
   var columnCount = cells.getNumColumns();
+  var rowCount = cells.getNumRows();
 
   if (columnCount < 3) {
     popup.alert("Select at least 3 columns: Address in the leftmost column(s); the geocoded Latitude, Longitude will go into the last 2 columns.");
@@ -343,21 +344,12 @@ function addressToPosition() {
   
   var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
   var location;
+
+  var addresses = sheet.getRange(cells.getRow(), cells.getColumn(), rowCount, columnCount - 2).getValues();
   
   // For each row of selected data...
-  for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
-    var address = ''; // Start with an empty String.
-    var part    = ''; // Part of the address to be concatenated.
-    
-    // Address data is in columns [1 .. columnCount - 2].
-    for (addressColumn = 1; addressColumn <= columnCount - 2; addressColumn++) {
-      part = cells.getCell(addressRow, addressColumn).getValue();
-      
-      if (part) {
-        address += ' ';
-        address += part;
-      }
-    }
+  for (addressRow = 1; addressRow <= rowCount; ++addressRow) {
+    var address = addresses[addressRow - 1].join(' ');
 
     // Replace problem characters.
     address = address.replace(/'/g, "%27");
@@ -376,6 +368,8 @@ function addressToPosition() {
       
       cells.getCell(addressRow, latColumn).setValue(lat);
       cells.getCell(addressRow, lngColumn).setValue(lng);
+    } else {
+      Logger.log(location.status);
     }
   }
 };
