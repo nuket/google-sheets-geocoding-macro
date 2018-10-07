@@ -10,7 +10,7 @@ Try the macro out on a [Test Sheet](https://docs.google.com/spreadsheets/d/1PZGu
 
 ## Google Sheets Add-On
 
-Coming soon, it's currently Pending Review. If it's accepted, it will be available as an Add-On for all of your Sheets. Until then, you've got to add it to each sheet you are using.
+Unfortunately, you've got to add this script to each sheet you are using.
 
 ## Multicolumn Addresses &rarr; Latitude, Longitude
 
