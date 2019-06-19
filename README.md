@@ -8,6 +8,8 @@ Geocode from addresses to latitude / longitude, and vice versa using Google Shee
 
 Try the macro out on a [Test Sheet](https://docs.google.com/spreadsheets/d/1PZGulsMOTAjJxjPDzMrkunTCXQlFYOga50m3ZouzxHg/edit?usp=sharing) with sample address data.
 
+You need to be logged into a Google Account before the Geocode menu will appear.
+
 ## Google Sheets Add-On
 
 Unfortunately, you've got to add this script to each sheet you are using.
