@@ -441,6 +441,82 @@ function positionToAddress() {
   }
 };
 
+// Reverse Geocode -- GPS position to nearest address, broken out into components.
+function positionToAddressComponents() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var cells = sheet.getActiveRange();
+  
+  // Must have selected 8 columns (Lat, Lng, +6 components).
+  // Must have selected at least 1 row.
+
+  var columnCount = cells.getNumColumns();
+
+  if (columnCount != 11) {
+    SpreadsheetApp.getUi().alert("Latitude, Longitude in the first 2 columns; the reverse-geocoded Address will go into the following columns.");
+    return;
+  }
+
+  var latColumn     = 1;
+  var lngColumn     = 2;
+
+  var addressRow;
+  var addressColumn = 3;
+
+  var geocoder = Maps.newGeocoder().setRegion(getGeocodingRegion());
+  var location;
+  
+  for (addressRow = 1; addressRow <= cells.getNumRows(); ++addressRow) {
+    var lat = cells.getCell(addressRow, latColumn).getValue();
+    var lng = cells.getCell(addressRow, lngColumn).getValue();
+    
+    // Geocode the lat, lng pair to an address.
+    location = geocoder.reverseGeocode(lat, lng);
+   
+    // Only change cells if geocoder seems to have gotten a 
+    // valid response.
+    //
+    // [{short_name=49, long_name=49, types=[street_number]}, {long_name=Bleibtreustraße, types=[route], short_name=Bleibtreustraße}, {long_name=Bezirk Charlottenburg-Wilmersdorf, types=[political, sublocality, sublocality_level_1], short_name=Bezirk Charlottenburg-Wilmersdorf}, {short_name=Berlin, types=[locality, political], long_name=Berlin}, {types=[administrative_area_level_1, political], short_name=Berlin, long_name=Berlin}, {short_name=DE, long_name=Germany, types=[country, political]}, {types=[postal_code], short_name=10623, long_name=10623}]
+
+    Logger.log(location.status);
+    if (location.status == 'OK') {
+      const L = location["results"][0]["address_components"];
+      
+      const outStreetNumber  = getAddressComponent(L, 'street_number',               'short_name');
+      const outStreet        = getAddressComponent(L, 'route',                       'short_name');
+      const outBorough       = getAddressComponent(L, 'sublocality',                 'short_name');
+      const outCity          = getAddressComponent(L, 'locality',                    'short_name');
+      const outStateLong     = getAddressComponent(L, 'administrative_area_level_1', 'long_name');
+      const outStateShort    = getAddressComponent(L, 'administrative_area_level_1', 'short_name');
+      const outCountryLong   = getAddressComponent(L, 'country',                     'long_name');
+      const outCountryShort  = getAddressComponent(L, 'country',                     'short_name');
+      const outPostcodeShort = getAddressComponent(L, 'postal_code',                 'short_name');
+
+      cells.getCell(addressRow, addressColumn + 0).setValue(outStreetNumber);
+      cells.getCell(addressRow, addressColumn + 1).setValue(outStreet);
+      cells.getCell(addressRow, addressColumn + 2).setValue(outBorough);
+      cells.getCell(addressRow, addressColumn + 3).setValue(outCity);
+      cells.getCell(addressRow, addressColumn + 4).setValue(outStateLong);
+      cells.getCell(addressRow, addressColumn + 5).setValue(outStateShort);
+      cells.getCell(addressRow, addressColumn + 6).setValue(outCountryLong);
+      cells.getCell(addressRow, addressColumn + 7).setValue(outCountryShort);
+      cells.getCell(addressRow, addressColumn + 8).setValue(outPostcodeShort);
+    }
+  }
+};
+
+function getAddressComponent(result, whichType, whichName) {
+  for (let r of result) {
+    for (let t of r["types"]) {
+      if (t === whichType) {
+        Logger.log(r[whichName]);
+        return r[whichName];
+      }
+    }
+  }
+  
+  return '';
+}
+
 function generateMenu() {
   // var setGeocodingRegionMenuItem = 'Set Geocoding Region (Currently: ' + getGeocodingRegion() + ')';
   
@@ -456,7 +532,12 @@ function generateMenu() {
   {
     name: "Geocode Selected Cells (Latitude, Longitude to Address)",
     functionName: "positionToAddress"
-  }];
+  },
+  {
+    name: "Geocode Selected Cells (Latitude, Longitude to Address Components)",
+    functionName: "positionToAddressComponents"
+  }
+  ];
   
   return entries;
 }
