@@ -1,5 +1,5 @@
 // Geocode Addresses
-// Copyright (c) 2016 - 2017 Max Vilimpoc
+// Copyright (c) 2016 - 2021 Max Vilimpoc
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+// Maps Premium Plan Keys (Your Own)
+//
+// "Enables the use of an externally established Google Maps APIs Premium Plan 
+// account, to leverage additional quota allowances. Your client ID and signing
+// key can be obtained from the Google Enterprise Support Portal."
+//
+// https://developers.google.com/apps-script/reference/maps/maps#setAuthentication(String,String)
+//
+// If you have this information and want to use it to increase your geocoding 
+// quota, enter it here as a string.
+
+var mapsClientId   = null; // something like 'gme-123456789'
+var mapsSigningKey = null; // something like 'VhSEZvOXVSdnlxTnpJcUE'
 
 // Bias the geocoding results in favor of these geographic regions.
 // The regions are specified as ccTLD codes.
@@ -353,6 +367,10 @@ function addressToPosition() {
 
     // Replace problem characters.
     address = address.replace(/'/g, "%27");
+    address = address.trim();
+
+    // Skip blank addresses.
+    if (0 == address.length) continue;
 
     Logger.log(address);
     
@@ -360,6 +378,8 @@ function addressToPosition() {
     // last 2 elements of the current range row.
     location = geocoder.geocode(address);
    
+    Logger.log(location.status);
+
     // Only change cells if geocoder seems to have gotten a 
     // valid response.
     if (location.status == 'OK') {
@@ -368,6 +388,9 @@ function addressToPosition() {
       
       cells.getCell(addressRow, latColumn).setValue(lat);
       cells.getCell(addressRow, lngColumn).setValue(lng);
+
+      Logger.log(lat);
+      Logger.log(lng);
     } else {
       Logger.log(location.status);
     }
@@ -445,6 +468,7 @@ function updateMenu() {
 /**
  * Adds a custom menu to the active spreadsheet, containing a single menu item
  * for invoking the readRows() function specified above.
+ *
  * The onOpen() function, when defined, is automatically invoked whenever the
  * spreadsheet is opened.
  *
@@ -452,8 +476,7 @@ function updateMenu() {
  * https://developers.google.com/apps-script/service_spreadsheet
  */
 function onOpen() {
+  if (mapsClientId && mapsSigningKey) Maps.setAuthentication(mapsClientId, mapsSigningKey);
+
   SpreadsheetApp.getActiveSpreadsheet().addMenu('Geocode', generateMenu());
-  // SpreadsheetApp.getActiveSpreadsheet().addMenu('Region',  generateRegionMenu());
-  // SpreadsheetApp.getUi()
-  //   .createMenu();
 };
