@@ -38,19 +38,21 @@ It also supports reverse geocoding.
 Simply select the latitude, longitude columns and it will place the nearest
 address data in the rightmost column. It will overwrite any data in that column.
 
-Less care is needed, as it will automatically use the leftmost two columns as
+Less care is needed, as it will automatically use the **leftmost two columns** as
 the latitude, longitude pair.
 
 ![Reverse Geocoding](images/google-sheets-geocoding-macro-reverse.png)
 
 ## Latitude, Longitude &rarr; Address Components
 
-It now supports reverse geocoding and splitting the address components into different columns.
+It now supports reverse geocoding and splitting the address components into
+different columns.
 
 See the Reverse To Components tab in the [Test
 Sheet](https://docs.google.com/spreadsheets/d/1tkzPt_yGfFG2MOs6-xBodajY79_WV8s4LpU6mhszAk4/edit?usp=sharing).
 
-![Reverse Geocoding to Address Components](images/google-sheets-geocoding-macro-reverse-to-components.apng)
+![Reverse Geocoding to Address
+Components](images/google-sheets-geocoding-macro-reverse-to-components.apng)
 
 ## Adding It To Your Own Sheet
 
