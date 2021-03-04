@@ -25,22 +25,23 @@
 // using an App Script installable trigger.
 
 function cleanupEverything() {
-    var sheet   = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Test Addresses");
-    var sheetId = sheet.getSheetId();
-    var sheets  = SpreadsheetApp.getActiveSpreadsheet().getSheets();
-  
-    for (var i = 0; i < sheets.length; i++) {
-      if (i != sheetId) {
-        Logger.log(`Removing "${sheets[i].getName()}".`);
-        SpreadsheetApp.getActiveSpreadsheet().deleteSheet(sheets[i]);
-      }
-    }
-  
-    Logger.log("Clearing user data from protected ranges.");
-  
-    sheet.getRange("Test Addresses!F3:H22").clear();
-    sheet.getRange("Test Addresses!A24:H1000").clear();
-  
-    Logger.log("Cleared.");
+  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheets      = spreadsheet.getSheets();
+
+  for (let s of sheets) {
+    if (s.getName() === 'Test Addresses' || s.getName() === 'Reverse To Components') continue;
+
+    Logger.log(`Removing "${s.getName()}".`);
+    spreadsheet.deleteSheet(s);
   }
+
+  Logger.log("Clearing user data from protected ranges.");
+
+  spreadsheet.getRange("Test Addresses!F3:H22").clearContent();
+  spreadsheet.getRange("Test Addresses!A24:H1000").clearContent();
   
+  spreadsheet.getRange("Reverse To Components!D3:L9").clearContent();
+  spreadsheet.getRange("Reverse To Components!A11:L1000").clearContent();
+
+  Logger.log("Cleared.");
+}
