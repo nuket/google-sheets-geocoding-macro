@@ -43,6 +43,15 @@ the latitude, longitude pair.
 
 ![Reverse Geocoding](images/google-sheets-geocoding-macro-reverse.png)
 
+## Latitude, Longitude &rarr; Address Components
+
+It now supports reverse geocoding and splitting the address components into different columns.
+
+See the Reverse To Components tab in the [Test
+Sheet](https://docs.google.com/spreadsheets/d/1tkzPt_yGfFG2MOs6-xBodajY79_WV8s4LpU6mhszAk4/edit?usp=sharing).
+
+![Reverse Geocoding to Address Components](images/google-sheets-geocoding-macro-reverse-to-components.apng)
+
 ## Adding It To Your Own Sheet
 
 Step 1. Create or Open a Google Sheet and add addresses to it.
