@@ -37,11 +37,20 @@ function cleanupEverything() {
 
   Logger.log("Clearing user data from protected ranges.");
 
-  spreadsheet.getRange("Test Addresses!F3:H22").clearContent();
-  spreadsheet.getRange("Test Addresses!A24:H1000").clearContent();
+  spreadsheet.getRange("Test Addresses!F3:H22").clear();
+  spreadsheet.getRange("Test Addresses!F3:G22").setHorizontalAlignment('normal');
+  spreadsheet.getRange("Test Addresses!H3:H22").setHorizontalAlignment('left');
   
-  spreadsheet.getRange("Reverse To Components!D3:L9").clearContent();
-  spreadsheet.getRange("Reverse To Components!A11:L1000").clearContent();
+  spreadsheet.getRange("Test Addresses!A24:H1000").clear();
+  spreadsheet.getRange("Test Addresses!A24:H1000").setHorizontalAlignment('left');
+  spreadsheet.getRange("Test Addresses!F24:G1000").setHorizontalAlignment('normal');
+  
+  spreadsheet.getRange("Reverse To Components!D3:L9").clear();
+  spreadsheet.getRange("Reverse To Components!D3:L9").setHorizontalAlignment('left');
+
+  spreadsheet.getRange("Reverse To Components!A11:L1000").clear();
+  spreadsheet.getRange("Reverse To Components!A11:L1000").setHorizontalAlignment('left');
+  spreadsheet.getRange("Reverse To Components!B11:C1000").setHorizontalAlignment('normal');
 
   Logger.log("Cleared.");
 }
