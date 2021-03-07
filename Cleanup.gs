@@ -21,6 +21,8 @@
 
 // Remove all user-created sheets.
 //
+// Remove all user-created images.
+//
 // Remove all user-entered data from unprotected ranges on a specific sheet
 // using an App Script installable trigger.
 
@@ -28,11 +30,23 @@ function cleanupEverything() {
   let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   let sheets      = spreadsheet.getSheets();
 
+  Logger.log("Clearing user-created Sheets.");
+
   for (let s of sheets) {
-    if (s.getName() === 'Test Addresses' || s.getName() === 'Reverse To Components') continue;
+    // Do not delete _these_ sheets.
+    if (s.getName() === 'Test Addresses' || s.getName() === 'Reverse To Components' || s.getName() === 'Mapping') continue;
 
     Logger.log(`Removing "${s.getName()}".`);
     spreadsheet.deleteSheet(s);
+  }
+
+  Logger.log("Clearing user-created Images.");
+
+  let allImages = spreadsheet.getSheetByName('Mapping').getImages();
+
+  for (let i of allImages) {
+    Logger.log(`Removing "${i}".`);
+    i.remove();
   }
 
   Logger.log("Clearing user data from protected ranges.");
@@ -51,6 +65,9 @@ function cleanupEverything() {
   spreadsheet.getRange("Reverse To Components!A11:L1000").clear();
   spreadsheet.getRange("Reverse To Components!A11:L1000").setHorizontalAlignment('left');
   spreadsheet.getRange("Reverse To Components!B11:C1000").setHorizontalAlignment('normal');
+
+  spreadsheet.getRange("Mapping!A3:Z1000").clear();
+  spreadsheet.getRange("Mapping!A3:Z1000").setHorizontalAlignment('normal');
 
   Logger.log("Cleared.");
 }

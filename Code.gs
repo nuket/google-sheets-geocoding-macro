@@ -517,6 +517,48 @@ function getAddressComponent(result, whichType, whichName) {
   return '';
 }
 
+// @param coords is an array of [lat, lng] arrays.
+function staticMapFromCoords(coords) {
+  let map = Maps.newStaticMap()
+    .setSize(1280, 720);
+
+  Logger.log(`Mapping ${coords.length} locations.`);
+
+  for (let c of coords) {
+    map.addMarker(c[0], c[1]);
+  }
+
+  return map;
+}
+
+function makePreview(map, sheet) {
+  // Add image to sheet. No wipeouts.
+
+  let allImages = sheet.getImages();
+  for (let i of allImages) {
+    i.remove();
+  }
+
+  const originCol = 4 + allImages.length;
+  const originRow = 3 + allImages.length;
+
+  let sheetImage = sheet.insertImage(map.getBlob(), originCol, originRow);
+  sheetImage.setAltTextDescription(map.getMapUrl);
+}
+
+function makeMap() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Mapping');
+
+  let range  = sheet.getRange('A3:B1000');
+  let values = range.getValues();
+
+  let filteredValues = values.filter((value) => { return (typeof(value[0]) === 'number' && typeof(value[1]) === 'number'); });
+
+  let map = staticMapFromCoords(filteredValues);
+
+  makePreview(map, sheet);
+}
+
 function generateMenu() {
   // var setGeocodingRegionMenuItem = 'Set Geocoding Region (Currently: ' + getGeocodingRegion() + ')';
   
@@ -536,6 +578,10 @@ function generateMenu() {
   {
     name: "Geocode Selected Cells (Latitude, Longitude to Address Components)",
     functionName: "positionToAddressComponents"
+  },
+  {
+    name: "Map Cells In Mapping Sheet (Latitude, Longitude -> Map Image)",
+    functionName: "makeMap"
   }
   ];
   
