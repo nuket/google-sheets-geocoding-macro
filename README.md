@@ -103,4 +103,11 @@ That's it.
   have access to the data you are entering. Since you're the owner of your
   Sheet, this isn't an issue. You can always audit the script by reading the
   source code in this repository.
+
+* It returns latitude / longitude data using "," instead of "." separators.
+
+  There's not much I can do about the return formats, but a user reported that
+  adding the following array formula to the latitude / longitude columns changes
+  the separators for them: `=ARRAYFORMULA(SUBSTITUTE(C2:C;",";"."`. 
   
+  Make sure you specify the correct columns.
