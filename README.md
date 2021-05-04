@@ -114,6 +114,6 @@ That's it.
 
   There's not much I can do about the return formats, but a user reported that
   adding the following array formula to the latitude / longitude columns changes
-  the separators for them: `=ARRAYFORMULA(SUBSTITUTE(C2:C;",";"."`. 
+  the separators for them: `=ARRAYFORMULA(SUBSTITUTE(C2:C;",";"."))`. 
   
   Make sure you specify the correct columns.
