@@ -54,6 +54,12 @@ Sheet](https://docs.google.com/spreadsheets/d/1tkzPt_yGfFG2MOs6-xBodajY79_WV8s4L
 ![Reverse Geocoding to Address
 Components](images/google-sheets-geocoding-macro-reverse-to-components.apng)
 
+## Map Cells
+
+It now supports mapping the Latitude, Longitude pairs in the Mapping tab.
+
+![Mapping Coordinates](images/google-sheets-geocoding-macro-mapping-points.apng)
+
 ## Adding It To Your Own Sheet
 
 Step 1. Create or Open a Google Sheet and add addresses to it.
