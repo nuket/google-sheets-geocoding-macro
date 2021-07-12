@@ -363,6 +363,12 @@ function addressToPosition() {
   
   // For each row of selected data...
   for (addressRow = 1; addressRow <= rowCount; ++addressRow) {
+    var lat = cells.getCell(addressRow, latColumn).getValue();
+    var lng = cells.getCell(addressRow, lngColumn).getValue();
+
+    // Skip rows which are already processed
+    if (lat.length > 0 && lng.length > 0) continue;
+
     var address = addresses[addressRow - 1].join(' ');
 
     // Replace problem characters.
