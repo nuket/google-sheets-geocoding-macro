@@ -5,22 +5,54 @@
 Geocode from addresses to latitude / longitude, and vice versa using Google
 Sheets.
 
-## Test Sheet
+## ~~Test Sheet~~
 
-Try the script out on a [Test
+> ~~Try the script out on a [Test
 Sheet](https://docs.google.com/spreadsheets/d/1tkzPt_yGfFG2MOs6-xBodajY79_WV8s4LpU6mhszAk4/edit?usp=sharing)
 with sample address data. You can enter your own address data and geocode it  in
-the rows below.
+the rows below.~~
+>
+> ~~You **must** be logged into a Google Account before the Geocode menu will
+appear.~~
+>
+> ~~Any data you enter will be automatically deleted every Sunday at 4AM CEST, this
+isn't for long term storage.~~
 
-You **must** be logged into a Google Account before the Geocode menu will
-appear.
+## Nope.
 
-Any data you enter will be automatically deleted every Sunday at 4AM CEST, this
-isn't for long term storage.
+Test Sheet is removed due to:
+
+* Google not locking down Apps Script **editing** capabilities for **Viewers** on the Sheet.
+  Because you can lock *cells*, but you can't lock *code*! Minor oversight!
+* too many people then editing the Apps Script code
+* too many people then breaking the Apps Script code and not fixing it afterwards
+* people immediately breaking the Cleanup code so that their data stays forever
+  (let's boil the oceans together!)
+* people adding random Extensions to this shared Sheet
+* Google not providing a way *at all* to remove Extensions that Viewers have added
+  ![](images/duh-no-way-to-remove-1.png)
+* people associating the Sheet with their own Google Cloud Platform projects
+  and breaking it for me and everyone else
+  ![](images/duh-no-way-to-remove-4.png)
+* Google not providing any sensible or quick ways to disassociate other peoples' GCP Project IDs
+  (no I do not want to screw around in the Google Cloud Console all afternoon)
+  ![](images/duh-no-way-to-remove-2.png)
+* me getting notifications from Google every time people now want access to the sheet
+  I created publicly, when access was not an issue before (to be fair, this probably
+  changed as Google changed things in their backend to compel authentication to a
+  once-public API)
+* ... other idiotic shenanigans
+
+**Good luck, this was a great experiment in the tragedy of the commons.**
+
+A few days ago, someone dropped a yogurt in the entrance hall to my apartment building
+and didn't clean it up. It was still there > 24 hours later, curdling into sour cream. Cool.
+
+![](images/duh-tragedy-of-the-commons-1.jpg)
 
 ## Multicolumn Addresses &rarr; Latitude, Longitude
 
-Now it supports geocoding using address data spread across multiple columns. 
+Now it supports geocoding using address data spread across multiple columns.
 
 The way this works is: You select a set of columns containing the data, and the
 geocoding process puts the latitude, longitude data in the **rightmost two
@@ -33,7 +65,7 @@ columns to create the address string.
 
 ## Latitude, Longitude &rarr; Nearest Address
 
-It also supports reverse geocoding. 
+It also supports reverse geocoding.
 
 Simply select the latitude, longitude columns and it will place the nearest
 address data in the rightmost column. It will overwrite any data in that column.
@@ -114,6 +146,6 @@ That's it.
 
   There's not much I can do about the return formats, but a user reported that
   adding the following array formula to the latitude / longitude columns changes
-  the separators for them: `=ARRAYFORMULA(SUBSTITUTE(C2:C;",";"."))`. 
-  
+  the separators for them: `=ARRAYFORMULA(SUBSTITUTE(C2:C;",";"."))`.
+
   Make sure you specify the correct columns.
